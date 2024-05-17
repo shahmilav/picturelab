@@ -4,32 +4,31 @@ import java.awt.*;
 
 public class PictureLab {
     public static void main(String[] args) {
-        grainy("milav_backyard.jpg", 250);
+        randomImageNoise("gorge.jpg", 250);
         chromakey(new Picture("src/PixLab/PixLab/images/moon-surface.jpg"));
     }
 
-    public static void chromakey(Picture newPic) {
+    public static void chromakey(Picture background) {
         Picture pic = new Picture("src/PixLab/PixLab/images/blue-mark.jpg");
 
-        Pixel[][] toPixels = pic.getPixels2D();
-        Pixel[][] fromPixels = newPic.getPixels2D();
-        for (int row = 0; row < pic.getHeight(); row++) {
-            for (int col = 0; col < pic.getWidth(); col++) {
+        Pixel[][] oldPixels2D = pic.getPixels2D();
+        Pixel[][] bgPixels2D = background.getPixels2D();
+        for (int x = 0; x < pic.getHeight(); x++) {
+            for (int y = 0; y < pic.getWidth(); y++) {
 
-                Pixel newP = toPixels[row][col];
-                if (newP.getBlue() > newP.getRed()) {
-                    Pixel oldP = fromPixels[row][col];
-                    newP.setColor(oldP.getColor());
+                Pixel oldPixel = oldPixels2D[x][y];
+                if (oldPixel.getBlue() > oldPixel.getRed()) {
+                    Pixel newPixel = bgPixels2D[x][y];
+                    oldPixel.setColor(newPixel.getColor());
                 }
             }
         }
 
         pic.explore();
-        newPic.explore();
-
+        background.explore();
     }
 
-    public static void grainy(String file, int grain) {
+    public static void randomImageNoise(String file, int grain) {
         Picture p = new Picture("src/PixLab/PixLab/images/" + file);
         p.explore();
 
@@ -56,10 +55,6 @@ public class PictureLab {
                 pixel.setColor(new Color(rn, gn, bn));
             }
         }
-
         p.explore();
-
     }
-
-
 }
