@@ -4,6 +4,6 @@ All PictureLab methods are in `picturelab/PixLab/src/PictureLab.java`
 
 ## Methods
 * [X] Chromakey
-* [ ] Stenography
+* [X] Stenography
 * [X] Random Color Grain
-* [ ] Custom Method 2
+* [X] Color Masking
