@@ -3,15 +3,18 @@ package PixLab.PixLab.src;
 import java.awt.*;
 
 public class PictureLab {
-
     public static String PATH = "src/PixLab/PixLab/images/";
 
     public static void main(String[] args) {
-        colorfulNoise("gorge.jpg", 255 /*Grain 255 for maximum noise!*/);
-        chromakey("redwood2.jpg", "blue-mark.jpg");
-        maskColor("ferrari.jpg", 100, Color.RED);
-        Picture p = stenographyEncode("femaleLionAndHall.jpg");
-        stenographyDecode(p);
+        colorfulNoise("SPIDERMAN DOPE (1).jpg", 210, false);
+        colorfulNoise("SPIDERMAN DOPE (2).jpg", 210, false);
+        colorfulNoise("SPIDERMAN DOPE (3).jpg", 210, false);
+        colorfulNoise("SPIDERMAN DOPE (4).jpg", 210, false);
+        colorfulNoise("SPIDERMAN DOPE (5).jpg", 210, true);
+        chromakey("forest.jpg", "monkes.jpg");
+        colorMask("ferrari.jpg", 100, Color.RED);
+        Picture encoded = stenographyEncode("femaleLionAndHall.jpg");
+        stenographyDecode(encoded);
     }
 
     /**
@@ -21,10 +24,12 @@ public class PictureLab {
      * @return the picture with the encoded message
      */
     public static Picture stenographyEncode(String fileName) {
-        Picture p = new Picture(PATH + fileName);
-        Picture m = new Picture(PATH + "msg.jpg");
+        Picture picture = new Picture(PATH + fileName);
+        Picture message = new Picture(PATH + "msg.jpg");
 
-        Pixel[][] pixels2D = p.getPixels2D();
+        Pixel[][] msgPixels = message.getPixels2D();
+        Pixel[][] pixels2D = picture.getPixels2D();
+
         for (Pixel[] pixels : pixels2D) {
             for (Pixel pixel : pixels) {
                 if (pixel.getBlue() % 2 == 0) {
@@ -33,17 +38,16 @@ public class PictureLab {
             }
         }
 
-        Pixel[][] mPixels = m.getPixels2D();
-        for (int i = 0; i < mPixels.length; i++) {
-            for (int j = 0; j < mPixels[i].length; j++) {
-                if (mPixels[i][j].colorDistance(Color.BLACK) < 50) {
+        for (int i = 0; i < msgPixels.length; i++) {
+            for (int j = 0; j < msgPixels[i].length; j++) {
+                if (msgPixels[i][j].colorDistance(Color.BLACK) < 50) {
                     pixels2D[i][j].setBlue(pixels2D[i][j].getBlue() + 1);
                 }
             }
         }
 
-        p.explore();
-        return p;
+        picture.explore();
+        return picture; // return the encoded picture
     }
 
 
@@ -81,10 +85,10 @@ public class PictureLab {
         Picture picture = new Picture(PATH + foregroundFile);
         Picture background = new Picture(PATH + backgroundFile);
 
-
         Pixel[][] oldPixels2D = picture.getPixels2D();
         Pixel[][] bgPixels2D = background.getPixels2D();
 
+        // Ensure we use the smaller array to avoid ArrayIndexOutOfBounds
         int smallerLength = Math.min(oldPixels2D.length, bgPixels2D.length);
         int smallerCols = Math.min(oldPixels2D[0].length, bgPixels2D[0].length);
 
@@ -92,7 +96,7 @@ public class PictureLab {
             for (int y = 0; y < smallerCols; y++) {
                 Pixel oldPixel = oldPixels2D[x][y];
 
-                if (oldPixel.colorDistance(Color.GREEN) < 50) {
+                if (oldPixel.colorDistance(Color.GREEN) < 180) {
                     Pixel newPixel = bgPixels2D[x][y];
                     oldPixel.setColor(newPixel.getColor());
                 }
@@ -100,7 +104,6 @@ public class PictureLab {
         }
 
         picture.explore();
-        background.explore();
     }
 
 
@@ -111,19 +114,20 @@ public class PictureLab {
      * @param distance parameter used to tune method; smaller methods mean it is more specific.
      * @param color    the color to find
      */
-    public static void maskColor(String file, int distance, Color color) {
+    public static void colorMask(String file, int distance, Color color) {
+
         Picture picture = new Picture(PATH + file);
-        picture.explore();
 
         for (Pixel[] pixels : picture.getPixels2D()) {
             for (Pixel pixel : pixels) {
                 if (pixel.colorDistance(color) > distance) {
+                    // pixel color is not in range
                     pixel.setColor(new Color(0, 0, 0));
                 } else {
+                    // pixel color is in range
                     pixel.setColor(new Color(255, 255, 255));
                 }
             }
-
         }
         picture.explore();
     }
@@ -131,15 +135,15 @@ public class PictureLab {
     /**
      * Applies colorful noise to an image file by randomly altering the RGB values of each pixel within a specified grain range.
      *
-     * @param file  the name of the image file located in the PATH" directory
-     * @param grain the range within which the random noise will alter the RGB values of each pixel; must be a positive integer
+     * @param file  the name of the image file
+     * @param grain the range within which the random noise will alter the RGB values of each pixel
      */
-    public static void colorfulNoise(String file, int grain) {
+    public static void colorfulNoise(String file, int grain, boolean greenscreen) {
         Picture picture = new Picture(PATH + file);
-        picture.explore();
 
         for (Pixel[] pixels : picture.getPixels2D()) {
             for (Pixel pixel : pixels) {
+                if (greenscreen) if (pixel.colorDistance(Color.GREEN) < 190) continue;
 
                 int r = pixel.getRed();
                 int g = pixel.getGreen();
@@ -149,19 +153,17 @@ public class PictureLab {
                 int gn = (int) (Math.random() * grain) + (g - grain / 2);
                 int bn = (int) (Math.random() * grain) + (b - grain / 2);
 
-                rn = Math.min(255, rn);
-                gn = Math.min(255, gn);
-                bn = Math.min(255, bn);
 
-                rn = Math.max(0, rn);
-                bn = Math.max(0, bn);
-                gn = Math.max(0, gn);
+                // Ensure the RGB values remain between 0 and 255
+                rn = Math.max(0, Math.min(255, rn));
+                bn = Math.max(0, Math.min(255, bn));
+                gn = Math.max(0, Math.min(255, gn));
 
                 pixel.setColor(new Color(rn, gn, bn));
             }
         }
+//        picture.write(PATH + "/GENERATED" + file.split(" ")[2]);
+
         picture.explore();
     }
-
-
 }
