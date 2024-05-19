@@ -1,9 +1,7 @@
-package PixLab.PixLab.src;
-
 import java.awt.*;
 
 public class PictureLab {
-    public static String PATH = "src/PixLab/PixLab/images/";
+    public static String PATH = "PixLab/images/";
 
     public static void main(String[] args) {
         colorfulNoise("SPIDERMAN DOPE (1).jpg", 210, false);

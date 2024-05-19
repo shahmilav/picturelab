@@ -1,6 +1,3 @@
-package PixLab.PixLab.src;
-
-import PixLab.PixLab.src.Picture;
 
 /**
  * This class contains class (static) methods
