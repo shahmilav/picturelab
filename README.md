@@ -1,6 +1,7 @@
 # PictureLab
+Methods by Milav and Runbier
 
-All PictureLab methods are in `picturelab/PixLab/src/PictureLab.java`
+All PictureLab methods are in `PixLab/src/PictureLab.java`
 
 ## Methods
 * [X] Chromakey
