@@ -12,7 +12,7 @@ All PictureLab methods are in `PixLab/src/PictureLab.java`
 
 ## Writeups
 ### Chromakey
-The chromakey method greenscreens two images. This is a similar technique to that used in video production. Our method takes two images as input: one background and one foreground. It replaces all green pixels in the foreground image (the greenscreen) with the corresponding pixels from the background image. The method takes two filenames as input: one for the background image and one for the foreground image. In specific, the colorDistance condition ensures only pixels close to green (0,255,0) are replaced. This threshold should be changed based on the input images for best results.
+The chromakey method greenscreens two images. This is a similar technique to that used in video production. Our method takes two images as input: one background and one foreground. It replaces all green pixels in the foreground image (the greenscreen) with the corresponding pixels from the background image. The method takes two filenames as input: one for the background image and one for the foreground image. In specific, the `colorDistance` condition ensures only pixels close to green `(0,255,0)` are replaced. This threshold should be changed based on the input images for best results.
 
 
 ### Stegonagraphy
