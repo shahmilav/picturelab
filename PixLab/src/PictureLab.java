@@ -44,6 +44,7 @@ public class PictureLab {
             }
         }
 
+        picture.write("PixLab/outputs/encoded.jpg");
         picture.explore();
         return picture; // return the encoded picture
     }
@@ -69,6 +70,7 @@ public class PictureLab {
             }
         }
 
+        picture.write("PixLab/outputs/decoded.jpg");
         picture.explore();
     }
 
@@ -100,7 +102,7 @@ public class PictureLab {
                 }
             }
         }
-
+        picture.write("PixLab/outputs/chromakey.jpg");
         picture.explore();
     }
 
@@ -127,6 +129,8 @@ public class PictureLab {
                 }
             }
         }
+
+        picture.write("PixLab/outputs/masked.jpg");
         picture.explore();
     }
 
@@ -160,8 +164,8 @@ public class PictureLab {
                 pixel.setColor(new Color(rn, gn, bn));
             }
         }
-//        picture.write(PATH + "/GENERATED" + file.split(" ")[2]);
 
+        picture.write("PixLab/outputs/GENERATED_" + file.split(" ")[2].charAt(1)+".jpg");
         picture.explore();
     }
 }
